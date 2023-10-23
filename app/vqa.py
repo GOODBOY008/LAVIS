@@ -6,9 +6,9 @@
 """
 
 import streamlit as st
-from app import load_demo_image, device
-from app.utils import load_model_cache
-from lavis.processors import load_processor
+import torch
+
+from app import load_demo_image, device, blip2_model, blip2_processor
 from PIL import Image
 
 
@@ -30,7 +30,8 @@ def app():
     if file:
         raw_img = Image.open(file).convert("RGB")
     else:
-        raw_img = load_demo_image()
+        raw_img = load_demo_image(
+            "https://b2bfiles1.gigab2b.cn/image/wkseller/20822/20230216_d4f40cbadf5788d154e6fdb7e3efaf77.jpg?x-oss-process=image%2Fresize%2Cw_500%2Ch_500%2Cm_pad")
 
     w, h = raw_img.size
     scaling_factor = 720 / w
@@ -44,20 +45,9 @@ def app():
 
     col2.header("Answer")
 
-    # ===== event =====
-    vis_processor = load_processor("blip_image_eval").build(image_size=480)
-    text_processor = load_processor("blip_question").build()
-
     if qa_button:
-        if model_type.startswith("BLIP"):
-            model = load_model_cache(
-                "blip_vqa", model_type="vqav2", is_eval=True, device=device
-            )
-
-            img = vis_processor(raw_img).unsqueeze(0).to(device)
-            question = text_processor(user_question)
-
-            vqa_samples = {"image": img, "text_input": [question]}
-            answers = model.predict_answers(vqa_samples, inference_method="generate")
-
-            col2.write("\n".join(answers), use_column_width=True)
+        inputs = blip2_processor(images=raw_img, text="Question: " + user_question + " Answer:",
+                                 return_tensors="pt").to(device, torch.float16)
+        generated_ids = blip2_model.generate(**inputs)
+        generated_text0 = blip2_processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
+        col2.write(generated_text0 + "\n", use_column_width=True)
