@@ -18,8 +18,8 @@ if __name__ == "__main__":
 
     # app.add_page("Image Description Generation", caption.app)
     # app.add_page("Multimodal Search", ms.app)
-    app.add_page("Giga Product Feature Detect (blip2)", giga_product_feature_sf.app)
-    app.add_page("Test prompt ", vqa.app)
+    app.add_page("Giga Product Feature Detect", giga_product_feature_sf.app)
+    app.add_page("Giga Prompt Test", vqa.app)
     # app.add_page("Visual Question Answering", vqa.app)
     # app.add_page("Image Text Matching", itm.app)
     # app.add_page("Text Localization", tl.app)

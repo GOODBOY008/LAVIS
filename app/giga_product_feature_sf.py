@@ -44,7 +44,8 @@ def app():
     question_arr = ["what main product is it?", "what color ?", "From the given image, can you recognize the design "
                                                                 "style of this piece? You can consider aspects like "
                                                                 "the furniture's lines, decorations, materials, "
-                                                                "and other features for your analysis.",
+                                                                "and other features for your analysis."
+                                                                "Please Answer in one word.",
                     "which product category it belong to?",
                     "what is the material?",
                     "From the given image, can you provide an estimation of the overall size? This could include "
